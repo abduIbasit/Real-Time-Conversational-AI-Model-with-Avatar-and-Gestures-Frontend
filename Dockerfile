@@ -13,14 +13,14 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the React app
+# Build the Vite app
 RUN npm run build
 
 # Use a lighter image for serving the app
 FROM nginx:alpine
 
 # Copy the build files from the previous stage
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expose the port that Nginx is running on
 EXPOSE 80
