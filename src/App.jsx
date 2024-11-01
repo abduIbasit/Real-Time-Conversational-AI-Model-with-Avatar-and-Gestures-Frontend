@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { FiSend, FiMic, FiPause } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
+import { v4 as uuidv4 } from "uuid";
 
-const wsUrl = "wss://34.55.139.78:8000/ws/conversation";
+const wsUrl = "ws://localhost:8000/ws/conversation";
 
 function App() {
   const [messages, setMessages] = useState({});
   const [input, setInput] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
-  const [currentSession, setCurrentSession] = useState("Chat 0");
-  const [sessions, setSessions] = useState(["Chat 0"]);
+  const [currentSession, setCurrentSession] = useState("Chat 1");
+  const [sessions, setSessions] = useState(["Chat 1"]);
   const [isPaused, setIsPaused] = useState(false);
   const ws = useRef(null);
   const chatEndRef = useRef(null);
@@ -28,14 +29,27 @@ function App() {
       const message = JSON.parse(event.data);
       const isVideoMessage = message.video_url && message.video_url.includes("http");
 
-      setMessages((prev) => ({
-        ...prev,
-        [currentSession]: [
-          ...(prev[currentSession] || []),
-          { user: "AI", text: message.text, video_url: isVideoMessage ? message.video_url : null },
-        ],
-      }));
+      if (message.transcribed_text) {
+        // Handle and display the transcribed text as the user message
+        setMessages((prev) => ({
+          ...prev,
+          [currentSession]: [
+            ...(prev[currentSession] || []),
+            { id: uuidv4(), user: "User", text: message.transcribed_text },
+          ],
+        }));
+      } else if (message.text) {
+        // Display the AI's generated response
+        setMessages((prev) => ({
+          ...prev,
+          [currentSession]: [
+            ...(prev[currentSession] || []),
+            { id: uuidv4(), user: "AI", text: message.text },
+          ],
+        }));
+      }
     };
+
 
     ws.current.onclose = () => console.log("Disconnected from WebSocket server");
     ws.current.onerror = (error) => console.error("WebSocket error:", error);
@@ -56,22 +70,16 @@ function App() {
   
           // Send Base64 encoded audio data
           ws.current.send(JSON.stringify(data));
-          setMessages((prev) => ({
-            ...prev,
-            [currentSession]: [
-              ...(prev[currentSession] || []),
-              { user: "User", text: "Voice Message Sent" },
-            ],
-          }));
         };
       } else {
         data = { prompt: text, session_id: currentSession };
         ws.current.send(JSON.stringify(data));
+
         setMessages((prev) => ({
           ...prev,
           [currentSession]: [
             ...(prev[currentSession] || []),
-            { user: "User", text },
+            { id: uuidv4(), user: "User", text },
           ],
         }));
         setInput("");
@@ -230,9 +238,9 @@ function App() {
       {/* Chat Area */}
       <div className="flex flex-col w-4/5 bg-white">
         <div className="flex-1 p-4 space-y-3 overflow-y-auto">
-          {(messages[currentSession] || []).map((msg, idx) => (
+          {(messages[currentSession] || []).map((msg) => (
             <div
-              key={idx}
+              key={msg.id}
               className={`flex ${
                 msg.user === "User" ? "justify-end" : "justify-center"
               }`}
