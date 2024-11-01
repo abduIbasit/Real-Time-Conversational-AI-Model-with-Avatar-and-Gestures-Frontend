@@ -1,5 +1,6 @@
 # Real-Time-Conversational-AI-Model-with-Avatar-and-Gestures-Frontend
-Frontend Application for the Real-Time-Conversational-AI-Model-with-Avatar-and-Gestures 
+
+Frontend Application for the [Real-Time-Conversational-AI-Model-with-Avatar-and-Gestures](https://github.com/abduIbasit/Real-Time-Conversational-AI-Model-with-Avatar-and-Gestures) 
 
 ### Run Application Locally
 
