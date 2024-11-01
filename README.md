@@ -1,7 +1,7 @@
 # Real-Time-Conversational-AI-Model-with-Avatar-and-Gestures-Frontend
 Frontend Application for the Real-Time-Conversational-AI-Model-with-Avatar-and-Gestures 
 
-## Run Application Locally
+### Run Application Locally
 
 To run the application, ensure you have `node` installed on your computer. Follow these steps:
 
