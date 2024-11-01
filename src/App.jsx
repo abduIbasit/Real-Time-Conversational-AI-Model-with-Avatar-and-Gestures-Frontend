@@ -2,15 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import { FiSend, FiMic, FiPause } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
 
-const wsUrl = "ws://34.55.139.78:8000/ws/conversation";
+const wsUrl = "wss://34.55.139.78:8000/ws/conversation";
 
 function App() {
   const [messages, setMessages] = useState({});
   const [input, setInput] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
-  const [currentSession, setCurrentSession] = useState("Chat 1");
-  const [sessions, setSessions] = useState(["Chat 1"]);
+  const [currentSession, setCurrentSession] = useState("Chat 0");
+  const [sessions, setSessions] = useState(["Chat 0"]);
   const [isPaused, setIsPaused] = useState(false);
   const ws = useRef(null);
   const chatEndRef = useRef(null);
@@ -258,7 +258,7 @@ function App() {
         </div>
 
         {/* Sound Wave Visualization */}
-        <canvas ref={canvasRef} className="h-10 mb-2 w-full bg-gray-200"></canvas>
+        <canvas ref={canvasRef} className="h-10 mb-2 w-full"></canvas>
 
         {/* Message Input Area */}
         <div className="p-3 border-t border-gray-200 flex items-center space-x-3 px-36">
