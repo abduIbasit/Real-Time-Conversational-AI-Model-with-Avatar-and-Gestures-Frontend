@@ -3,7 +3,7 @@ import { FiSend, FiMic, FiPause } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
 import { v4 as uuidv4 } from "uuid";
 
-const wsUrl = "ws://localhost:8000/ws/conversation";
+const wsUrl = "wss://34.55.139.78/:8000/ws/conversation";
 
 function App() {
   const [messages, setMessages] = useState({});
