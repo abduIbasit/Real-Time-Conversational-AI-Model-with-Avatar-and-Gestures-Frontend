@@ -27,10 +27,17 @@ function App() {
 
     ws.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      const isVideoMessage = message.video_url && message.video_url.includes("http");
-
-      if (message.transcribed_text) {
-        // Handle and display the transcribed text as the user message
+    
+      if (message.video_url && message.video_url.includes("http")) {
+        setMessages((prev) => ({
+          ...prev,
+          [currentSession]: [
+            ...(prev[currentSession] || []),
+            { id: uuidv4(), user: "AI", video_url: message.video_url },
+          ],
+        }));
+      } else if (message.transcribed_text) {
+        // Handle transcribed text
         setMessages((prev) => ({
           ...prev,
           [currentSession]: [
@@ -39,7 +46,7 @@ function App() {
           ],
         }));
       } else if (message.text) {
-        // Display the AI's generated response
+        // Handle AI text response
         setMessages((prev) => ({
           ...prev,
           [currentSession]: [
@@ -49,6 +56,7 @@ function App() {
         }));
       }
     };
+    
 
 
     ws.current.onclose = () => console.log("Disconnected from WebSocket server");
